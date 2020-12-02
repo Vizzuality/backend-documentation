@@ -71,3 +71,55 @@ _query_ data only, not to _mutate_ data), besides using a single "endpoint".
 This is a major departure from the consistent use of key HTTP verbs in REST
 APIs.
 
+- GraphQL is kind of RPC
+
+In their simplest form, GraphQL queries do indeed feel declarative; for example:
+
+```
+query {
+  me {
+    canonicalName
+  }
+}
+```
+
+However, they can be augmented with _parameters_ which may describe server-side
+operations of arbitrary complexity; such as plain filters in the example below
+(`repositories(filter: { count: 2 }`):
+
+```
+query {
+  me {
+    canonicalName
+    repositories(filter: { count: 2 }) {
+      cursor
+      results {
+        id, name, updated
+      }
+    }
+  }
+}
+```
+
+Or stateful cursors for paginated result sets such as in the example below:
+
+```
+query {
+  me {
+    canonicalName
+    repositories(cursor: "<long string with cursor>") {
+      cursor
+      results {
+        id, name, updated
+      }
+    }
+  }
+}
+```
+
+In my view, GraphQL allows to hit a sweet spot between the meaningful
+manipulation of representations of resources as typically done in REST APIs, and
+the potential expressiveness and flexibility of RPC interfaces, yet without
+forcing to work within the complexity of more elaborate RPC systems (for those
+still having SOAP or XML-RPC nightmares from the 2000s).
+
