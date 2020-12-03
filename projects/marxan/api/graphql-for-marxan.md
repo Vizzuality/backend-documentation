@@ -123,3 +123,45 @@ the potential expressiveness and flexibility of RPC interfaces, yet without
 forcing to work within the complexity of more elaborate RPC systems (for those
 still having SOAP or XML-RPC nightmares from the 2000s).
 
+- GraphQL enforces strongly typed schemas
+
+Although it is indeed possible to create GraphQL schemas that only use basic
+scalar types (such as `String`, `Int`, `Float`, `Boolean`), in practice this
+would hardly be useful: most often, expressive types are created and composed.
+
+Union types, interfaces, enums are commonly used to curate expressive API
+graphs.
+
+"Making impossible states impossible" through strong typing is indeed a major
+advantage of the GraphQL query language.
+
+In the example above, the `createRepository()` mutation accepts one required
+string parameter (`name`) and one optional string parameter (`description`),
+and makes use of an enum type for the `visibility` parameter.
+
+Query payloads that don't validate against the schema are outright rejected (and
+GraphQL tooling can help to avoid even creating invalid payloads, especially if
+coupled with TypeScript typing).
+
+- Caching is... different
+
+A major point for GraphQL skepticism, but likely in practice not all that
+relevant in projects like the Marxan cloud platform.
+
+GraphQL queries (as opposed to mutations and subscriptions) could indeed be
+cached by using the `GET`-verb endpoint, companion to the `POST` one normally
+used (with some caveats).
+
+In practice, for authenticated GraphQL APIs where query results may be different
+for each authenticated user, even this may not be a major issue, especially
+when combined with application-level caching strategies, which are available at
+different levels of granularity (from whole-request down to individual fields).
+
+Several common caching strategies are implemented in major GraphQL client and
+server implementations, making it possible to rely on existing best practices
+and keeping development complexity under control.
+
+Moreover, expensive queries that need to be exposed to non-authenticated users
+could also be made available over ad-hoc REST endpoints, thus allowing to enjoy
+the benefits of HTTP-layer gateway caching.
+
