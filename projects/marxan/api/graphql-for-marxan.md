@@ -165,3 +165,91 @@ Moreover, expensive queries that need to be exposed to non-authenticated users
 could also be made available over ad-hoc REST endpoints, thus allowing to enjoy
 the benefits of HTTP-layer gateway caching.
 
+## Some more points to consider
+
+More traits of GraphQL API practices cannot be gleaned from the initial example
+above. I am briefly outlining here the ones that are, in my opinion, most
+relevant to the Marxan cloud platform scenario.
+
+- Authentication is often kept as a REST subsystem
+
+This seems to be common practice, and allows to use different established
+authentication strategies (e.g. password authentication, 2FA, OAuth2, etc.).
+
+Once a token or key of some sort is obtained, this can be used in HTTP headers
+as commonly done in `Bearer` type authorization strategies or equivalent.
+
+- Introspection augments the type system
+
+In practice, this is often used to provide functionality similar to what OpenAPI
+interfaces do; in the case of GraphQL, documentation of the whole API graph is
+consistently done via introspection, so the GraphQL schema serves both as
+parsing, validation and query processing layer as well as documentation layer
+(the same may be true in some OpenAPI server implementations, in practice).
+
+Documentation on *how to use* a GraphQL API is typically still needed like with
+most non-trivial APIs, although the type system combined with introspection and
+meaningful naming of queries, mutations and parameters provides a convenient
+core documentation layer.
+
+- Authorization
+
+Fine-grained access control is pretty much equally doable via REST and GraphQL.
+
+For example, only allowing users with a specific role to set or modify specific
+fields, or to set them to specific values under specific circumstances, or to
+query specific fields.
+
+GraphQL may make some access control rules more expressive (for example, by
+using access decorators in the schema definition) and easier to understand at a
+glance, although I would argue this is mostly a tooling concern as well as a
+matter of preference.
+
+- N+1 problem
+
+GraphQL resolvers by default typically traverse a query graph node by node,
+depth-first and may process each node in isolation, which could easily lead to
+very inefficient database queries (defaults are actually up to server
+implementations - this would be a worst-case scenario).
+
+GraphQL server implementations may provide, either as core functionality or
+through a library/module, lazy loading/async/batching functionality which
+essentially traverses the whole query graph (or parts of it), compiling a query
+plan and eventually executing this to load data from database through the least
+possible number of queries (simplifying things a bit here).
+
+This pattern ("DataLoader") may limit the ability to compute/estimate cost of
+individual resolvers, so in case of very complex query graphs, things will still
+need to be optimised for a sane balance between query performance and the
+ability to constrain queries whose computational cost is considered unacceptable
+for the specific context.
+
+- API Versioning
+
+A common strategy seems to be evolutive versioning, or basically deprecating
+affected fields (the GraphQL schema description language provides a
+`@Deprecated` directive for this) and introducing their eventual replacements,
+while keeping the deprecated ones in place until it is possible/reasonable to
+break existing API contracts.
+
+- Errors
+
+Besides sidestepping the semantics of HTTP verbs besides `GET` and `POST`,
+GraphQL also handles errors differently than via HTTP status codes. In practice,
+client and server implementations take care of error handling similarly to how
+HTTP status codes would be handled by REST frameworks. Additionally, GraphQL
+error handling can be granular, for example surfacing different kinds of errors
+as they apply to different parts of a query.
+
+- Federation
+
+GraphQL APIs for distinct microservices can be federated at the API layer itself
+(e.g. via Apollo Federation), essentially providing a GraphQL-focused gateway
+that allows clients to see a single GraphQL API even though parts of its
+functionality may be provided by independent microservices.
+
+We didn't use nor needed this functionality in Wildlife Insights, but as we are
+likely going to rely on a small set of microservices for data processing
+operations, this could be a useful feature for the Marxan cloud platform. We
+could of course equally do some ad-hoc lightweight proxying of REST requests in
+the API.
