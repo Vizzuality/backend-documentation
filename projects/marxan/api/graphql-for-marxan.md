@@ -2,6 +2,30 @@
 
 Some key points from my deep dive into the GraphQL ecosystem.
 
+## The TL;DR
+
+* JSON:API and GraphQL should both be a good fit for the project
+* frontend devs should be able to reuse some existing components/strategies if
+  using JSON:API, and have experience with JSON:API
+* the API framework we are using for Marxan (NestJS, also used in Wildlife
+  Insights and Mars MGIS) natively supports GraphQL and we have experience and
+  reusable code for GraphQL, from Wildlife Insights
+* JSON:API would need to be integrated into NestJS via a TypeScript
+  implementation of the JSON:API specification (we may need to do some research
+  via proofs of concept)
+* (we also used GraphQL via Apollo for the Wildlife Insights frontend, so we may
+  be able to reuse code or at least strategies from this)
+* JSON:API relies on familiar HTTP and REST concepts
+* GraphQL departs in several ways from HTTP and REST concepts
+* GraphQL allows to focus on strict typing and on a schema-first approach
+* (optionally, GraphQL schema and types can integrate with TypeScript type
+  definitions)
+* a GraphQL schema should allow us to create a mock API quickly, via
+  `graphql-faker`
+* Both JSON:API and GraphQL in practice require client and server tooling
+
+## A deeper dive
+
 First, a quick example. We will create a new Git repository/project on the
 [SourceHut platform](https://sr.ht/) via its GraphQL API.
 
