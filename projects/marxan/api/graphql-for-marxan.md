@@ -24,6 +24,20 @@ Some key points from my deep dive into the GraphQL ecosystem.
   `graphql-faker`
 * Both JSON:API and GraphQL in practice require client and server tooling
 
+## My recommendation
+
+I recommend that we use GraphQL. Despite the likely initial higher ramp-up for
+frontend development, we should be able to reap benefits in terms of development
+ergonomics over the timespan of the project.
+
+Bias disclaimer: although I did my homework reading the JSON:API specification,
+I have no production experience with JSON:API and I was very happy with GraphQL
+in Wildlife Insights (and in some pre-Vizz Gatsby projects).
+
+I expect that handling JSON:API with NestJS through one of the TypeScript
+JSON:API implementations should be reasonably doable, but here be dragons - we
+won't be able to rely on an existing NestJS plugin.
+
 ## A deeper dive
 
 First, a quick example. We will create a new Git repository/project on the
