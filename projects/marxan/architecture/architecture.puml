@@ -1,0 +1,52 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICON2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/dev2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/react.puml
+!include DEVICONS/nodejs_small.puml
+!include DEVICONS/postgresql.puml
+!include DEVICONS/redis.puml
+!include DEVICON2/apache.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_AS_SKETCH()
+
+Person(user, "Users", "Marxan platform users", "users")
+Person(admin, "Admins", "Marxan platform administrators", "users")
+
+Container(app, "Frontend App", "React/NextJS", "The main interface that the customer interacts with", "react")
+
+System_Boundary(backend, "backend") {
+  System_Boundary(api_stuff, "API") {
+    Container(api, "API", "NestJS", "Main API", "nodejs_small")
+    ContainerDb(db, "Database", "PostgreSQL + PostGIS", "Data layer and GIS processing", "postgresql")
+    ContainerDb(redis, "K/V store", "Redis", "Cache and job queues", "redis")
+  }
+
+  System_Boundary(dp, "Data pipelines") {
+    Container(airflow, "Airflow", "Apache Airflow", "Data pipeline orchestration", "apache")
+
+    System_Boundary(airflow_workers, "Airflow workers") {
+      Container(airflow_worker1, "Airflow worker", "Marxan image")
+      Container(airflow_worker2, "Airflow worker", "Ad-hoc container image")
+'      Container(airflow_worker3, "Airflow worker", "Ad-hoc container image")
+'      Container(airflow_worker4, "Airflow worker", "Ad-hoc container image")
+    }
+  }
+}
+
+Container(ci_cd, "CI/CD", "Jenkins?")
+Container(image_registry, "Image registry", "Azure container registry?")
+
+Container(bastion_host, "Bastion host", "Linux VM")
+
+Rel(user, app, "Uses", "https")
+Rel(admin, backend, "Can access Kubernetes clusters")
+Rel(app, api, "Uses", "https")
+Rel_R(api, airflow, "Submits jobs")
+Rel_R(airflow, api, "\nUpdates job status")
+Rel_R(api, db, "Reads/Writes")
+Rel_R(api, redis, "Reads/Writes")
+@enduml
