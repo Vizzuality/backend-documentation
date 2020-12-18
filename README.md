@@ -62,8 +62,7 @@ could reference code examples or libraries that we could reuse, if relevant.
 
 ## How should we document things?
 
-For now, let's not worry about the bike shed. [Yellow is best
-anyways](https://www.youtube.com/watch?v=GEou3t_QKgM&t=2442)!
+For now, let's not worry about the bike shed.
 
 We can try to add some initial content with some lightweight structure or none
 at all, and then review things as we go.
