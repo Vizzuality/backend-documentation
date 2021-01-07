@@ -31,7 +31,7 @@ data in `config/custom-environment-variables.json`.
 }
 ```
 
-## Database setup
+## ORM and database connection setup
 
 Add db setup: https://docs.nestjs.com/techniques/database.
 
@@ -57,3 +57,26 @@ simple logic to use different settings according to the `NODE_ENV`, e.g.
   ssl: ['staging', 'production'].includes(config.util.getEnv('NODE_ENV')) ? true : false,
 [...]
 ```
+
+## OpenAPI plugin
+
+See https://docs.nestjs.com/openapi/introduction.
+
+The example configuration from the NestJS documentation covers most of what we
+typically need.
+
+If we want to sync the OpenAPI [*document
+version*](http://spec.openapis.org/oas/v3.0.3#fixed-fields-0) with the app
+versioning/release flow, we could add this configuration snippet:
+
+```
+  const swaggerOptions = new DocumentBuilder()
+  [...]
+    .setVersion(process.env.npm_package_version || 'development')
+  [...]
+```
+
+If using a global path prefix for the API (e.g.
+`app.setGlobalPrefix('/api/v1');`), this must be set *before* the setup of the
+OpenAPI documentation, so that this is reflected automatically in the generated
+OpenAPI output.
