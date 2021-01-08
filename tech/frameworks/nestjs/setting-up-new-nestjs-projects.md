@@ -96,3 +96,21 @@ the `CorsUtils` module in the Marxan API repository.
 
 @debt This module should be moved to a self-standing package with common
 utilities for our NestJS projects.
+
+## Basic security settings via Helmet
+
+It may be a good idea to activate [Helmet](https://www.npmjs.com/package/helmet)
+for the NestJS app in `main.ts`:
+
+```typescript
+import * as helmet from 'helmet';
+
+[...]
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+
+[...]
+```
