@@ -18,7 +18,7 @@ Configure environment variables. We'll want `POSTGRES_URL` and
 `NETWORK_CORS_ORIGINS` to start with. We map these from env vars to `config`
 data in `config/custom-environment-variables.json`.
 
-```
+```json
 {
   "postgres": {
     "url": "POSTGRES_URL"
@@ -56,7 +56,7 @@ For reference: https://typeorm.io/#/using-ormconfig
 Using a TypeScript file for the TypeORM configuration allows us to easily add
 simple logic to use different settings according to the `NODE_ENV`, e.g.
 
-```
+```typescript
 [...]
   ssl: ['staging', 'production'].includes(config.util.getEnv('NODE_ENV')) ? true : false,
 [...]
@@ -73,7 +73,7 @@ If we want to sync the OpenAPI [*document
 version*](http://spec.openapis.org/oas/v3.0.3#fixed-fields-0) with the app
 versioning/release flow, we could add this configuration snippet:
 
-```
+```typescript
   const swaggerOptions = new DocumentBuilder()
   [...]
     .setVersion(process.env.npm_package_version || 'development')
