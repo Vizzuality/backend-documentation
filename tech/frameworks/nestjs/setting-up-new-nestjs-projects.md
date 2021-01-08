@@ -31,6 +31,10 @@ data in `config/custom-environment-variables.json`.
 }
 ```
 
+Remember to create a `test.json` configuration file in the `config` folder (this
+will likely be initially an empty JSON document: just `{}`), as this will be
+needed when using `node-config` in Jest tests.
+
 ## ORM and database connection setup
 
 Add db setup: https://docs.nestjs.com/techniques/database.
