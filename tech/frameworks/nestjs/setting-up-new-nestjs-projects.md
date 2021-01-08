@@ -84,3 +84,15 @@ If using a global path prefix for the API (e.g.
 `app.setGlobalPrefix('/api/v1');`), this must be set *before* the setup of the
 OpenAPI documentation, so that this is reflected automatically in the generated
 OpenAPI output.
+
+## CORS setup
+
+Most likely needed in every case. See https://docs.nestjs.com/security/cors
+
+In past projects we have used our own origin handler function, which can be
+configured via `node-config`, with defaults included in the app's config and
+instance-specific whitelisted origins configured via environment variables: see
+the `CorsUtils` module in the Marxan API repository.
+
+@debt This module should be moved to a self-standing package with common
+utilities for our NestJS projects.
