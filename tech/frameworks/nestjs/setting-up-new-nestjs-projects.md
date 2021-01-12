@@ -100,17 +100,6 @@ utilities for our NestJS projects.
 ## Basic security settings via Helmet
 
 It may be a good idea to activate [Helmet](https://www.npmjs.com/package/helmet)
-for the NestJS app in `main.ts`:
+for the NestJS app in `main.ts`: see https://docs.nestjs.com/security/helmet for
+quick setup notes.
 
-```typescript
-import * as helmet from 'helmet';
-
-[...]
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.use(helmet());
-
-[...]
-```
